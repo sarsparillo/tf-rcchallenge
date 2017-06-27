@@ -1,2 +1,2 @@
 # tf-rcchallenge
-Rollercoaster Challenge plugin
+ThinkFun Rollercoaster Challenge plugin for WordPress. 
