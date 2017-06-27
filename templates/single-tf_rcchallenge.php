@@ -132,7 +132,7 @@ function tf_rcchallenge_post() {
 
 			// set hash for post meta
 			if ( $new_challenge ) {
-				add_post_meta($new_challenge, 'uhash', $upload_path . $unique);
+				add_post_meta($new_challenge, 'uhash', $upload_dir['url'] . '/' . $unique);
 			}
 
 
