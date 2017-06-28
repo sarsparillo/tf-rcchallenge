@@ -23,10 +23,10 @@ function tf_rcarchive() {
 	if ( have_posts()) : 
 		while ( have_posts() ) : the_post();
 		$uid = get_post_meta(get_the_ID(), 'uhash', true);
-
+		if (!empty($uid)) {
 		?>
 		<div id="rc-challenge-img"  style="display: inline-block; position: relative;"><a href="<?php echo get_the_ID(); ?>"><img src="<?php echo $uid ?>_hint.png" /></a></div>
-		<?php
+		<?php }
 	endwhile; endif;
 
 	echo '</div>';
