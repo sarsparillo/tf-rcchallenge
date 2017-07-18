@@ -72,6 +72,62 @@ function init(){
 		{ id: "ov_start", src: imgurl + "over/start.png" },
 		{ id: "ov_end", src: imgurl + "over/end.png" },
 
+		{ id: "n1", src: imgurl + "thumb/n1.png" },
+		{ id: "th_n1", src: imgurl + "thumb/n1.png" },
+		{ id: "ov_n1", src: imgurl + "thumb/n1.png" },
+
+		{ id: "n2", src: imgurl + "thumb/n2.png" },
+		{ id: "th_n2", src: imgurl + "thumb/n2.png" },
+		{ id: "ov_n2", src: imgurl + "thumb/n2.png" },
+
+		{ id: "n3", src: imgurl + "thumb/n3.png" },
+		{ id: "th_n3", src: imgurl + "thumb/n3.png" },
+		{ id: "ov_n3", src: imgurl + "thumb/n3.png" },
+
+		{ id: "n4", src: imgurl + "thumb/n4.png" },
+		{ id: "th_n4", src: imgurl + "thumb/n4.png" },
+		{ id: "ov_n4", src: imgurl + "thumb/n4.png" },
+
+		{ id: "n5", src: imgurl + "thumb/n5.png" },
+		{ id: "th_n5", src: imgurl + "thumb/n5.png" },
+		{ id: "ov_n5", src: imgurl + "thumb/n5.png" },
+
+		{ id: "n6", src: imgurl + "thumb/n6.png" },
+		{ id: "th_n6", src: imgurl + "thumb/n6.png" },
+		{ id: "ov_n6", src: imgurl + "thumb/n6.png" },
+
+		{ id: "n7", src: imgurl + "thumb/n7.png" },
+		{ id: "th_n7", src: imgurl + "thumb/n7.png" },
+		{ id: "ov_n7", src: imgurl + "thumb/n7.png" },
+
+		{ id: "n8", src: imgurl + "thumb/n8.png" },
+		{ id: "th_n8", src: imgurl + "thumb/n8.png" },
+		{ id: "ov_n8", src: imgurl + "thumb/n8.png" },
+
+		{ id: "n9", src: imgurl + "thumb/n9.png" },
+		{ id: "th_n9", src: imgurl + "thumb/n9.png" },
+		{ id: "ov_n9", src: imgurl + "thumb/n9.png" },
+
+		{ id: "n10", src: imgurl + "thumb/n10.png" },
+		{ id: "th_n10", src: imgurl + "thumb/n10.png" },
+		{ id: "ov_n10", src: imgurl + "thumb/n10.png" },
+
+		{ id: "n11", src: imgurl + "thumb/n11.png" },
+		{ id: "th_n11", src: imgurl + "thumb/n11.png" },
+		{ id: "ov_n11", src: imgurl + "thumb/n11.png" },
+
+		{ id: "n12", src: imgurl + "thumb/n12.png" },
+		{ id: "th_n12", src: imgurl + "thumb/n12.png" },
+		{ id: "ov_n12", src: imgurl + "thumb/n12.png" },
+
+		{ id: "n13", src: imgurl + "thumb/n13.png" },
+		{ id: "th_n13", src: imgurl + "thumb/n13.png" },
+		{ id: "ov_n13", src: imgurl + "thumb/n13.png" },
+
+		{ id: "n14", src: imgurl + "thumb/n14.png" },
+		{ id: "th_n14", src: imgurl + "thumb/n14.png" },
+		{ id: "ov_n14", src: imgurl + "thumb/n14.png" },
+
 	];
 	preload = new createjs.LoadQueue(true);
 	preload.loadManifest(manifest, true);
@@ -141,6 +197,14 @@ function init(){
 		makeSolution('solution');
 		stage.removeChild(puzzleBtn);
 		stage.removeChild(cardFooter);
+
+		stage.removeChild(flipBtn);
+		addPostNumbers();
+		addPostNumbers();
+		addPostNumbers();
+		addPostNumbers();
+		addPostNumbers();
+
 		stage.addChild(finishBtn);
 		stage.update();
 	})
@@ -181,7 +245,7 @@ function init(){
 
 
 	// draw pieces to map
-	function drawPieces(elem, xPos, yPos, xHint, yHint) {
+	function drawPieces(elem, xPos, yPos, xHint, yHint, pNum) {
 		var bmp, iSrc;
 			iSrc = imgurl + "thumb/" + elem + ".png";
 
@@ -198,8 +262,9 @@ function init(){
 				isInFooter: false,
 				footerX: xHint,
 				footerY: yHint,
-				bRotate: 0,
-				bFlip: 1
+				storeRotation: 0,
+				storeFlip: 1,
+				isPostNum: pNum
 			})
 
 			bmp.image.onload = function() {
@@ -228,7 +293,7 @@ function init(){
 			bmp.on("pressmove", function(e) {
 				var piece = this;
 
-				if (stageOne) { dragPiece(piece, e); }
+				if (stageOne || piece.isPostNum == true) { dragPiece(piece, e); }
 				
 				stage.update(); 
 			});
@@ -236,7 +301,7 @@ function init(){
 			bmp.on("pressup", function(e) {
 				var piece = this;
 				
-				if (stageOne) { dropPiece(piece); }
+				if (stageOne || piece.isPostNum == true) { dropPiece(piece); }
 				else { containPiece(piece); }
 
 				stage.update();
@@ -272,12 +337,14 @@ function init(){
 	// drop tile
 	function dropPiece(piece) {
 		if (!piece.isDragging && !piece.isThumb) { 
-			if (rotating === true) { piece.rotation = piece.bRotate = piece.rotation + 90; }
-			else { 
-				if (piece.scaleX == 1) { piece.scaleX = piece.bFlip = -1; }
-				else { piece.scaleX = piece.bFlip = 1; };
-				rotating = true; 
-				flipBtn.gotoAndStop(0); }
+			if (piece.isPostNum == false) {
+				if (rotating === true) { piece.rotation = piece.storeRotation = piece.rotation + 90; }
+				else { 
+					if (piece.scaleX == 1) { piece.scaleX = piece.storeFlip = -1; }
+					else { piece.scaleX = piece.storeFlip = 1; };
+					rotating = true; 
+					flipBtn.gotoAndStop(0); }
+				}
 			}
 		if (!piece.isLegitPlacement) {
 			piece.x = piece.originX;
@@ -315,8 +382,8 @@ function init(){
 				footerPieceList.splice(footerPieceList.indexOf(piece.name), 1);
 				pieceCounter(piece, inFooterArray(piece.name));
 
-				piece.rotation = piece.bRotate;
-				piece.scaleX = piece.bFlip;
+				piece.rotation = piece.storeRotation;
+				piece.scaleX = piece.storeFlip;
 				piece.image = preload.getResult(piece.name);
 				piece.isInFooter = false;
 			}
@@ -336,8 +403,8 @@ function init(){
 	function pieceCounter(piece, num) {
 		var pieceText = new createjs.Text("x" + num, "12px Arial", "#000000");
 		if (piece.name == "cornerred" || piece.name == "cornerblue" ) {
-			pieceText.x = piece.footerX + 35;
-			pieceText.y = piece.footerY + 35;
+			pieceText.x = piece.footerX + 38;
+			pieceText.y = piece.footerY + 38;
 		} else if (piece.name == "loop") {
 			pieceText.x = piece.footerX + 35;
 			pieceText.y = piece.footerY + 25;
@@ -347,7 +414,7 @@ function init(){
 		}
 
 		var tb = new createjs.Graphics();
-		tb.beginFill("#FFFFFF").drawRect(pieceText.x,pieceText.y,12,12);
+		tb.beginFill("#FFFFFF").drawRect(pieceText.x,pieceText.y,13,13);
 		var textBackground = new createjs.Shape(tb);
 		
 		if (num != null) {
@@ -399,60 +466,78 @@ function init(){
 	function addPieces() {
 		var bitmap;
 		// blue pieces
-		bitmap = drawPieces("blue1", 508, 249, 55, 550);
-		bitmap = drawPieces("blue1", 508, 249, 55, 550);
-		bitmap = drawPieces("blue2", 559, 249, 55, 570);
-		bitmap = drawPieces("blue2", 559, 249, 55, 570);
-		bitmap = drawPieces("blue3", 610, 249, 55, 590);
-		bitmap = drawPieces("blue3", 610, 249, 55, 590);
+		bitmap = drawPieces("blue1", 508, 249, 55, 550, false);
+		bitmap = drawPieces("blue1", 508, 249, 55, 550, false);
+		bitmap = drawPieces("blue2", 559, 249, 55, 570, false);
+		bitmap = drawPieces("blue2", 559, 249, 55, 570, false);
+		bitmap = drawPieces("blue3", 610, 249, 55, 590, false);
+		bitmap = drawPieces("blue3", 610, 249, 55, 590, false);
 
 		// pink and orange pieces
-		bitmap = drawPieces("pink1", 740, 249, 112, 550);
-		bitmap = drawPieces("pink1", 740, 249, 112, 550);
-		bitmap = drawPieces("orange2", 740, 312, 112, 570);
-		bitmap = drawPieces("orange2", 740, 312, 112, 570);
+		bitmap = drawPieces("pink1", 740, 249, 112, 550, false);
+		bitmap = drawPieces("pink1", 740, 249, 112, 550, false);
+		bitmap = drawPieces("orange2", 740, 312, 112, 570, false);
+		bitmap = drawPieces("orange2", 740, 312, 112, 570, false);
 
 		// green pieces
-		bitmap = drawPieces("green1", 508, 312, 112, 590);
-		bitmap = drawPieces("green1", 508, 312, 112, 590);
-		bitmap = drawPieces("green1", 508, 312, 112, 590);
-		bitmap = drawPieces("green2", 559, 312, 55, 610);
-		bitmap = drawPieces("green2", 559, 312, 55, 610);
-		bitmap = drawPieces("green2", 559, 312, 55, 610);
-		bitmap = drawPieces("green3", 610, 312, 112, 610);
-		bitmap = drawPieces("green3", 610, 312, 112, 610);
-		bitmap = drawPieces("green4", 662, 312, 55, 630);
-		bitmap = drawPieces("green4", 662, 312, 55, 630);
+		bitmap = drawPieces("green1", 508, 312, 112, 590, false);
+		bitmap = drawPieces("green1", 508, 312, 112, 590, false);
+		bitmap = drawPieces("green1", 508, 312, 112, 590, false);
+		bitmap = drawPieces("green2", 559, 312, 55, 610, false);
+		bitmap = drawPieces("green2", 559, 312, 55, 610, false);
+		bitmap = drawPieces("green2", 559, 312, 55, 610, false);
+		bitmap = drawPieces("green3", 610, 312, 112, 610, false);
+		bitmap = drawPieces("green3", 610, 312, 112, 610, false);
+		bitmap = drawPieces("green4", 662, 312, 55, 630, false);
+		bitmap = drawPieces("green4", 662, 312, 55, 630, false);
 
 		// corner pieces
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
-		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565, false);
 
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
-		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565, false);
 
 		// loop and tunnels
-		bitmap = drawPieces("loop", 708, 398, 345, 570);
-		bitmap = drawPieces("tunnelred", 672, 443, 0, 0);
-		bitmap = drawPieces("tunnelpurple", 672, 465, 0, 0);
+		bitmap = drawPieces("loop", 708, 398, 345, 570, false);
+		bitmap = drawPieces("tunnelred", 672, 443, 0, 0, false);
+		bitmap = drawPieces("tunnelpurple", 672, 465, 0, 0, false);
 		
 		// start and end
-		bitmap = drawPieces("start", 499, 371, 0, 0);
-		bitmap = drawPieces("end", 583, 371, 0, 0);
+		bitmap = drawPieces("start", 499, 371, 0, 0, false);
+		bitmap = drawPieces("end", 583, 371, 0, 0, false);
 	};
 	addPieces();
+
+	function addPostNumbers() {
+		var postNum;
+		postNum = drawPieces("n1", 505, 160, 0, 0, true);
+		postNum = drawPieces("n2", 545, 160, 0, 0, true);
+		postNum = drawPieces("n3", 585, 160, 0, 0, true);
+		postNum = drawPieces("n4", 625, 160, 0, 0, true);
+		postNum = drawPieces("n5", 665, 160, 0, 0, true);
+		postNum = drawPieces("n6", 705, 160, 0, 0, true);
+		postNum = drawPieces("n7", 745, 160, 0, 0, true);
+		postNum = drawPieces("n8", 505, 205, 0, 0, true);
+		postNum = drawPieces("n9", 545, 205, 0, 0, true);
+		postNum = drawPieces("n10", 585, 205, 0, 0, true);
+		postNum = drawPieces("n11", 625, 205, 0, 0, true);
+		postNum = drawPieces("n12", 665, 205, 0, 0, true);
+		postNum = drawPieces("n13", 705, 205, 0, 0, true);
+		postNum = drawPieces("n14", 745, 205, 0, 0, true);
+	}
 
 	function solutionFooter() {
 		cardFooter.image.onload = function() {

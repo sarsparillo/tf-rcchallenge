@@ -59,7 +59,7 @@ function tf_rcchallenge_post() {
 		</section>
 		<section id="rc-share">
 			<a href="http://twitter.com/share?text=Come play my Roller Coaster Challenge!&url=<?php echo get_permalink(); ?>&hashtags=thinkfun,rollercoasterchallenge">Share on Twitter</a>
-			<a href="https://www.facebook.com/sharer/sharer.php?p[url]=<?php echo get_permalink(); ?>&p[title]=Roller Coaster Challenge">Share on Facebook</a>
+			<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo get_permalink(); ?>">Share on Facebook</a>
 		</section>
 		<section id="rc-buy">
 		<span>Don't own Roller Coaster Challenge? <a href="http://www.thinkfun.com/products/roller-coaster-challenge/">Buy it today!</a></span>
