@@ -55,6 +55,23 @@ function init(){
 		{ id: "end", src: imgurl + "end.png" },
 		{ id: "tunnelred", src: imgurl + "tunnelred.png" },
 		{ id: "tunnelpurple", src: imgurl + "tunnelpurple.png" },
+		{ id: "ov_blue1", src: imgurl + "over/blue1.png" },
+		{ id: "ov_blue2", src: imgurl + "over/blue2.png" },
+		{ id: "ov_blue3", src: imgurl + "over/blue3.png" },
+		{ id: "ov_green1", src: imgurl + "over/green1.png" },
+		{ id: "ov_green2", src: imgurl + "over/green2.png" },
+		{ id: "ov_green3", src: imgurl + "over/green3.png" },
+		{ id: "ov_green4", src: imgurl + "over/green4.png" },
+		{ id: "ov_cornerblue", src: imgurl + "over/cornerblue.png" },
+		{ id: "ov_cornerred", src: imgurl + "over/cornerred.png" },
+		{ id: "ov_pink1", src: imgurl + "over/pink1.png" },
+		{ id: "ov_orange2", src: imgurl + "over/orange2.png" },
+		{ id: "ov_loop", src: imgurl + "over/loop.png" },
+		{ id: "ov_tunnelred", src: imgurl + "over/tunnelred.png" },
+		{ id: "ov_tunnelpurple", src: imgurl + "over/tunnelpurple.png" },
+		{ id: "ov_start", src: imgurl + "over/start.png" },
+		{ id: "ov_end", src: imgurl + "over/end.png" },
+
 	];
 	preload = new createjs.LoadQueue(true);
 	preload.loadManifest(manifest, true);
@@ -192,6 +209,19 @@ function init(){
 
 			bmp.on("mousedown", function(e) {
 				this.offset = { x: this.x - e.stageX, y: this.y - e.stageY };
+			});
+
+			bmp.on("mouseover", function(e) {
+				if (!this.isThumb && !this.isInFooter) {
+					this.image = preload.getResult("ov_" + this.name);
+					stage.update();
+				}
+			})
+			bmp.on("mouseout", function(e) {
+				if (!this.isThumb && !this.isInFooter) {
+					this.image = preload.getResult(this.name);
+					stage.update();
+				}
 			})
 
 			// pressmove event will run while mouse moves until released
@@ -225,6 +255,7 @@ function init(){
 
 		piece.x = event.stageX + piece.offset.x;
 		piece.y = event.stageY + piece.offset.y;
+		stage.setChildIndex(piece, stage.getNumChildren()-1);
 
 		// intersection check, place piece on tile snap point
 		if (tilesContainer.getObjectUnderPoint(piece.x, piece.y, 0)) {
@@ -253,8 +284,8 @@ function init(){
 			piece.y = piece.originY;
 			piece.rotation = 0;
 			piece.scaleX = piece.scaleY = 1;
-			piece.image = preload.getResult("th_" + piece.name);
 			piece.isThumb = true;
+			piece.image = preload.getResult("th_" + piece.name);
 		}				
 		piece.isDragging = false;
 	}
@@ -268,11 +299,8 @@ function init(){
 				piece.originX = piece.x;
 				piece.originY = piece.y;
 
-				if (footerPieceList.indexOf(piece.name) > -1) {
-					console.log('found');
-				}
-
 				footerPieceList.push(piece.name);
+				pieceCounter(piece, inFooterArray(piece.name));
 
 				piece.image = preload.getResult("th_" + piece.name);
 				piece.x = piece.footerX;
@@ -280,14 +308,55 @@ function init(){
 				piece.rotation = 0;
 				piece.scaleX = 1;
 				piece.isInFooter = true;
-			} else {
+			} else {				
 				piece.x = piece.originX;
 				piece.y = piece.originY;
+
+				footerPieceList.splice(footerPieceList.indexOf(piece.name), 1);
+				pieceCounter(piece, inFooterArray(piece.name));
+
 				piece.rotation = piece.bRotate;
 				piece.scaleX = piece.bFlip;
 				piece.image = preload.getResult(piece.name);
 				piece.isInFooter = false;
 			}
+		}
+	}
+
+	// count iterations in footer
+	function inFooterArray(y) {
+		var count = {};
+		footerPieceList.forEach(function(x) {
+			count[x] = (count[x] || 0) + 1;
+		})
+		return count[y];
+	}
+
+	// draw piece counter
+	function pieceCounter(piece, num) {
+		var pieceText = new createjs.Text("x" + num, "12px Arial", "#000000");
+		if (piece.name == "cornerred" || piece.name == "cornerblue" ) {
+			pieceText.x = piece.footerX + 35;
+			pieceText.y = piece.footerY + 35;
+		} else if (piece.name == "loop") {
+			pieceText.x = piece.footerX + 35;
+			pieceText.y = piece.footerY + 25;
+		} else {
+			pieceText.x = piece.footerX + 20;
+			pieceText.y = piece.footerY;			
+		}
+
+		var tb = new createjs.Graphics();
+		tb.beginFill("#FFFFFF").drawRect(pieceText.x,pieceText.y,12,12);
+		var textBackground = new createjs.Shape(tb);
+		
+		if (num != null) {
+			stage.addChild(textBackground);
+			stage.addChild(pieceText);
+			stage.update();
+		} else {
+			stage.addChild(textBackground);
+			stage.update();
 		}
 	}
 
@@ -326,62 +395,63 @@ function init(){
 
 
 	// add game pieces to board
+	// details are name, sideboardx, sideboardy, footerx, footery
 	function addPieces() {
 		var bitmap;
 		// blue pieces
-		bitmap = drawPieces("blue1", 508, 249, 60, 550);
-		bitmap = drawPieces("blue1", 508, 249, 60, 550);
-		bitmap = drawPieces("blue2", 559, 249, 60, 570);
-		bitmap = drawPieces("blue2", 559, 249, 60, 570);
-		bitmap = drawPieces("blue3", 610, 249, 60, 590);
-		bitmap = drawPieces("blue3", 610, 249, 60, 590);
+		bitmap = drawPieces("blue1", 508, 249, 55, 550);
+		bitmap = drawPieces("blue1", 508, 249, 55, 550);
+		bitmap = drawPieces("blue2", 559, 249, 55, 570);
+		bitmap = drawPieces("blue2", 559, 249, 55, 570);
+		bitmap = drawPieces("blue3", 610, 249, 55, 590);
+		bitmap = drawPieces("blue3", 610, 249, 55, 590);
 
 		// pink and orange pieces
-		bitmap = drawPieces("pink1", 740, 249, 105, 550);
-		bitmap = drawPieces("pink1", 740, 249, 105, 550);
-		bitmap = drawPieces("orange2", 740, 312, 105, 570);
-		bitmap = drawPieces("orange2", 740, 312, 105, 570);
+		bitmap = drawPieces("pink1", 740, 249, 112, 550);
+		bitmap = drawPieces("pink1", 740, 249, 112, 550);
+		bitmap = drawPieces("orange2", 740, 312, 112, 570);
+		bitmap = drawPieces("orange2", 740, 312, 112, 570);
 
 		// green pieces
-		bitmap = drawPieces("green1", 508, 312, 105, 590);
-		bitmap = drawPieces("green1", 508, 312, 105, 590);
-		bitmap = drawPieces("green1", 508, 312, 105, 590);
-		bitmap = drawPieces("green2", 559, 312, 60, 610);
-		bitmap = drawPieces("green2", 559, 312, 60, 610);
-		bitmap = drawPieces("green2", 559, 312, 60, 610);
-		bitmap = drawPieces("green3", 610, 312, 105, 610);
-		bitmap = drawPieces("green3", 610, 312, 105, 610);
-		bitmap = drawPieces("green4", 662, 312, 60, 630);
-		bitmap = drawPieces("green4", 662, 312, 60, 630);
+		bitmap = drawPieces("green1", 508, 312, 112, 590);
+		bitmap = drawPieces("green1", 508, 312, 112, 590);
+		bitmap = drawPieces("green1", 508, 312, 112, 590);
+		bitmap = drawPieces("green2", 559, 312, 55, 610);
+		bitmap = drawPieces("green2", 559, 312, 55, 610);
+		bitmap = drawPieces("green2", 559, 312, 55, 610);
+		bitmap = drawPieces("green3", 610, 312, 112, 610);
+		bitmap = drawPieces("green3", 610, 312, 112, 610);
+		bitmap = drawPieces("green4", 662, 312, 55, 630);
+		bitmap = drawPieces("green4", 662, 312, 55, 630);
 
 		// corner pieces
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
-		bitmap = drawPieces("cornerblue", 583, 466, 155, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
+		bitmap = drawPieces("cornerblue", 499, 466, 175, 565);
 
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
-		bitmap = drawPieces("cornerred", 499, 466, 230, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
+		bitmap = drawPieces("cornerred", 583, 466, 255, 565);
 
 		// loop and tunnels
-		bitmap = drawPieces("loop", 708, 398, 330, 570);
+		bitmap = drawPieces("loop", 708, 398, 345, 570);
 		bitmap = drawPieces("tunnelred", 672, 443, 0, 0);
 		bitmap = drawPieces("tunnelpurple", 672, 465, 0, 0);
 		
 		// start and end
 		bitmap = drawPieces("start", 499, 371, 0, 0);
 		bitmap = drawPieces("end", 583, 371, 0, 0);
-	}
+	};
 	addPieces();
 
 	function solutionFooter() {
@@ -389,7 +459,7 @@ function init(){
 			stage.addChild(cardFooter);
 			stage.update();
 		}
-	}
+	};
 	solutionFooter();
 
 	// add pieces background after all other pieces, place at 0
@@ -399,14 +469,14 @@ function init(){
 	pieceBackground.image.onload = function() {
 		stage.addChildAt(pieceBackground, 0);
 		stage.update();
-	}
+	};
 
 	// add background after all other pieces, place at 0
 	var background = new createjs.Bitmap(imgurl + "card.png");
 	background.image.onload = function() {
 		stage.addChildAt(background, 0);
 		stage.update();
-	}
+	};
 
 	// save portion as image
 	function makeSolution(type){
