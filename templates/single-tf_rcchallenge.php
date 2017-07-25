@@ -37,7 +37,7 @@ function tf_rcchallenge_post() {
 			<input type="hidden" name="rc-challenge-input" value="" id="rc-challenge-input" />
 			<input type="hidden" name="rc-solution-input" value="" id="rc-solution-input" />
 
-			<input type="submit" value="Submit Challenge" tabindex="3" id="submit" name="submit" class="hidden-rc">
+			<input type="submit" value="Save Challenge" tabindex="3" id="submit" name="submit" class="hidden-rc">
 			<section style="width: 100%; text-align: center;">
 				<div id="rc-challenge-img" style="display: inline-block; position: relative;"></div>
 				<div id="rc-solution-img" style="display: inline-block; position: relative;"></div>
@@ -58,8 +58,13 @@ function tf_rcchallenge_post() {
 			<div id="rc-solution-img" style="display: inline-block; position: relative;" class="hidden-solution"> <img src="<?php echo $uid ?>_solution.png" /></div>
 		</section>
 		<section id="rc-share">
-			<a href="http://twitter.com/share?text=Come play my Roller Coaster Challenge!&url=<?php echo get_permalink(); ?>&hashtags=thinkfun,rollercoasterchallenge">Share on Twitter</a>
-			<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo get_permalink(); ?>">Share on Facebook</a>
+			<a href="http://twitter.com/share?text=Come play my Roller Coaster Challenge!&url=<?php echo get_permalink(); ?>&hashtags=thinkfun,rollercoasterchallenge" onclick="javascript:window.open(this.href,\'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;"
+>Share on Twitter</a>
+			<a href="https://www.facebook.com/sharer/sharer.php?u=<?php get_permalink(); ?>&picture=&title=ThinkFun%27s+Roller+Coaster+Challenge%21&caption=ThinkFun%27s+Roller+Coaster+Challenge%21&quote=Come+test+yourself+against+my+custom+roller+coaster+challenge%21&description=Come+test+yourself+against+my+custom+roller+coaster+challenge%21" onclick="javascript:window.open(this.href,\'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;">Share on Facebook</a>
+			<a href="javascript:window.print()">Print this challenge</a>
+
+
+
 		</section>
 		<section id="rc-buy">
 		<span>Don't own Roller Coaster Challenge? <a href="http://www.thinkfun.com/products/roller-coaster-challenge/">Buy it today!</a></span>

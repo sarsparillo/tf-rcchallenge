@@ -80,3 +80,15 @@
 #rc-share a:hover {
 	background: #007FC9;
 	box-shadow: 0 2px 2px #fff; }
+
+@media print {
+	header, nav, .nav-secondary, .site-header, .footer-widgets, footer, .site-footer, #rc-share, #rc-buy { display: none; }
+	.single-tf_rcchallenge .site-inner { background: #fff; padding: 0; }
+	.single-tf_rcchallenge .content-sidebar-wrap {
+	border: none;
+	box-shadow: none; }
+	.content-sidebar-wrap { margin: 0; }
+	.hidden-solution:before {	content: ''; }
+	#rc-challenge-img, #rc-solution-img { width: 252px; }
+	img {width: 100%; height: auto;}
+}
