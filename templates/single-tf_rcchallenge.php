@@ -54,7 +54,7 @@ function tf_rcchallenge_post() {
 	else { ?>
 
 		<section style="width: 100%; text-align: center;" id="rc-puzzlecards">
-			<div id="rc-challenge-img"  style="display: inline-block; position: relative;"> <img src="<?php echo $uid ?>_hint.png" /></div>
+			<div id="rc-challenge-img" style="display: inline-block; position: relative;"> <img src="<?php echo $uid ?>_hint.png" /></div>
 			<div id="rc-solution-img" style="display: inline-block; position: relative;" class="hidden-solution"> <img src="<?php echo $uid ?>_solution.png" /></div>
 		</section>
 		<section id="rc-share">

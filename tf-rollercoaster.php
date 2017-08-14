@@ -32,7 +32,7 @@
 	add_filter('single_template','tf_rcsingle_template');
 	add_filter('archive_template','tf_rcarchive_template');
 
-	//route single- template
+	//route single - template
 	function tf_rcsingle_template($single_template){
 	  global $post;
 	  $found = locate_template('single-tf_rcchallenge.php');
@@ -42,7 +42,7 @@
 	  return $single_template;
 	}
 
-	//route archive- template
+	//route archive - template
 	function tf_rcarchive_template($template){
 	  if(is_post_type_archive('tf_rcchallenge')){
 	    $theme_files = array('archive-tf_rcchallenge.php');
