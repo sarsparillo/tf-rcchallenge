@@ -11,6 +11,7 @@ add_action( 'genesis_before_loop', 'tf_rcchallenge_post' );
 function tf_rcchallenge_post() {
 
 	$pid = get_the_ID();
+	set_post_thumbnail($pid, 10314);
 	$uid = get_post_meta($pid, 'uhash', true);
 	$thecontent = get_the_content();
 
@@ -58,13 +59,9 @@ function tf_rcchallenge_post() {
 			<div id="rc-solution-img" style="display: inline-block; position: relative;" class="hidden-solution"> <img src="<?php echo $uid ?>_solution.png" /></div>
 		</section>
 		<section id="rc-share">
-			<a href="http://twitter.com/share?text=Come play my Roller Coaster Challenge!&url=<?php echo get_permalink(); ?>&hashtags=thinkfun,rollercoasterchallenge" onclick="javascript:window.open(this.href,\'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;"
->Share on Twitter</a>
-			<a href="https://www.facebook.com/sharer/sharer.php?u=<?php get_permalink(); ?>&picture=&title=ThinkFun%27s+Roller+Coaster+Challenge%21&caption=ThinkFun%27s+Roller+Coaster+Challenge%21&quote=Come+test+yourself+against+my+custom+roller+coaster+challenge%21&description=Come+test+yourself+against+my+custom+roller+coaster+challenge%21" onclick="javascript:window.open(this.href,\'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600\');return false;">Share on Facebook</a>
+			<a href="http://twitter.com/share?text=Come play my Roller Coaster Challenge!&url=<?php echo get_permalink(); ?>&hashtags=thinkfun,rollercoasterchallenge">Share on Twitter</a>
+			<a href="https://www.facebook.com/dialog/share?app_id=697207157143417&href=<?php get_permalink(); ?>">Share on Facebook</a>
 			<a href="javascript:window.print()">Print this challenge</a>
-
-
-
 		</section>
 		<section id="rc-buy">
 		<span>Don't own Roller Coaster Challenge? <a href="http://www.thinkfun.com/products/roller-coaster-challenge/">Buy it today!</a></span>
